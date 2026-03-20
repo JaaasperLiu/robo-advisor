@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/figures/logo.png" alt="RoboAdvisor Logo" width="280">
+</p>
+
 # Robo-Advisor: A Reproducible Algorithmic Backtesting System
 
 A modular, offline backtesting system that evaluates rule-based portfolio strategies with a focus on **correctness**, **reproducibility**, and **engineering robustness**. It provides a complete pipeline from data ingestion to auditable performance reports.
