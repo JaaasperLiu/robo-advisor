@@ -1,76 +1,108 @@
-# A Reproducible Algorithmic Backtesting System
+# Robo-Advisor: A Reproducible Algorithmic Backtesting System
 
-This repository contains the source code for a modular, offline backtesting system designed to evaluate algorithmic portfolio strategies with a strong focus on correctness, reproducibility, and engineering robustness. The system is the subject of the dissertation, "Design and Evaluation of a Reproducible Algorithmic Backtesting System."
+> Dissertation project — *"Design and Evaluation of a Reproducible Algorithmic Backtesting System"*
 
-It provides a complete, end-to-end pipeline for ingesting price data, computing features, simulating portfolio performance with a walk-forward methodology, and generating a rich set of auditable output artefacts. The project uses two transparent, rule-based strategies as case studies: an inverse-volatility approximation of **Risk Parity** and a **Time-Series Momentum** strategy.
+A modular, offline backtesting system that evaluates rule-based portfolio strategies with a focus on **correctness**, **reproducibility**, and **engineering robustness**. The system provides a complete pipeline from data ingestion to auditable performance reports.
 
-## Core Engineering Features
+Two transparent strategies are implemented as case studies:
 
-- **Modular Architecture**: The system is organized into distinct, testable stages for data ingestion, feature generation, strategy logic, portfolio simulation, and evaluation.
-- **Deterministic Execution**: Given the same inputs and configuration, the pipeline is guaranteed to produce identical outputs. This is verified via a hash-based protocol.
-- **Automated Testing**: A suite of 14 unit tests (`pytest`) validates the correctness of the core backtesting engine, metrics calculations, and data handling policies.
-- **Robustness and Failure Handling**: The system includes explicit, logged policies for handling common data issues like missing values and duplicate timestamps.
-- **Auditable Artefacts**: For each run, the pipeline exports a complete set of results, including equity curves, monthly weights, performance metrics, and the exact configuration used.
+- **Risk Parity** — inverse-volatility weighting across asset classes
+- **Time-Series Momentum (TSMOM)** — trend-following with dynamic allocation
+
+![Equity Curves](docs/figures/equity_curves.png)
+
+## Results
+
+Backtest period: **2003-03 to 2021-11** | Universe: **8 ETFs** | Rebalancing: **Monthly**
+
+| Metric | Risk Parity | TSMOM |
+|--------|:-----------:|:-----:|
+| CAGR | 3.0% | 8.1% |
+| Volatility | 4.2% | 9.6% |
+| Sharpe Ratio | 0.74 | 0.86 |
+| Sortino Ratio | 0.76 | 1.13 |
+| Max Drawdown | -19.1% | -15.2% |
+| Monthly Turnover | 0.32 | 2.03 |
+
+## Key Features
+
+- **Deterministic execution** — identical outputs guaranteed for the same inputs, verified via hash-based protocol
+- **Modular pipeline** — separate stages for data ingestion, feature generation, strategy logic, simulation, and evaluation
+- **14 unit tests** — validates the backtesting engine, metrics, strategy logic, and data handling
+- **Auditable artefacts** — each run exports equity curves, weights, metrics, config snapshots, and reproducibility hashes
+- **Walk-forward evaluation** — out-of-sample testing with expanding windows
 
 ## Project Structure
 
 ```
-robo-advisor-offline/
-|-- config/                 # YAML files for backtest parameters & asset universe
-|-- data/                   # Input price data (e.g., prices_monthly.csv)
-|-- docs/                   # Documentation templates (e.g., model card)
-|-- notebooks/              # Jupyter notebooks for analysis and visualization
-|-- reports/                # All output artefacts (metrics, weights, logs, hashes)
-|-- src/                    # Main source code for the backtesting pipeline
-|   |-- backtest/           # Core portfolio simulation engine
-|   |-- metrics/            # Performance and risk calculation functions
-|   |-- strategies/         # Strategy logic (risk_parity.py, momentum.py)
-|   |-- utils/              # Helper functions
-|   `-- run_pipeline.py     # Main entry point to run the backtests
-|-- tests/                  # Pytest suite for unit and integration tests
-|-- requirements.txt        # Python package dependencies
-`-- README.md               # This file
+robo-advisor/
+├── config/              # YAML backtest parameters & asset universe
+├── data/                # Input price data (see data/README.md)
+├── docs/                # Model card, disclosure template, figures
+├── notebooks/           # Jupyter notebooks for analysis & visualization
+├── reports/             # Generated artefacts (gitignored)
+├── src/
+│   ├── backtest/        # Portfolio simulation engine
+│   ├── metrics/         # Performance & risk calculations
+│   ├── strategies/      # Risk parity, momentum
+│   ├── utils/           # Determinism seed utilities
+│   └── run_pipeline.py  # Main entry point
+├── tests/               # Pytest suite
+├── requirements.txt
+└── LICENSE
 ```
 
-## Setup and Usage
+## Quick Start
 
-### 1. Prerequisites
-
-- Python 3.10+
-- An environment with the packages listed in `requirements.txt` installed.
-
-### 2. Installation
-
-Clone the repository and install the required packages:
+### 1. Install
 
 ```bash
-git clone <repository_url>
-cd robo-advisor-offline
+git clone https://github.com/JaaasperLiu/robo-advisor.git
+cd robo-advisor
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Running the Pipeline
+### 2. Prepare Data
 
-To run the full backtesting pipeline for both strategies, execute the main script from the root directory:
+Run notebook `notebooks/01_data_prep.ipynb` to download monthly ETF prices via `yfinance`, or provide your own `data/prices_monthly.csv` (see `data/README.md` for format).
+
+### 3. Run a Backtest
 
 ```bash
-python3 src/run_pipeline.py
+# Risk Parity strategy
+python3 -m src.run_pipeline --strategy=risk_parity
+
+# Time-Series Momentum strategy
+python3 -m src.run_pipeline --strategy=momentum
 ```
 
-Upon completion, all output artefacts—including metrics, equity curves, weights, logs, and reproducibility hashes—will be saved to the `reports/` directory.
+**Optional flags:**
 
-### 4. Running the Tests
+```bash
+python3 -m src.run_pipeline --strategy=risk_parity \
+    --start 2006-01-31 \
+    --end 2021-12-31 \
+    --tc_bps 5 \
+    --max_weight 0.25
+```
 
-To verify the correctness of the core components, run the automated test suite:
+Results are saved to `reports/`.
+
+### 4. Run Tests
 
 ```bash
 pytest
 ```
 
-### 5. Exploratory Analysis
+### 5. Explore
 
-The `notebooks/` directory contains Jupyter notebooks for deeper analysis, visualization, and replication of the figures and tables presented in the dissertation.
+The `notebooks/` directory contains Jupyter notebooks for deeper analysis, visualization, and replication of the dissertation figures and tables.
 
 ## Disclaimer
 
-This project is for educational and research purposes only. The strategies, data, and results are part of a controlled academic study and do not constitute investment advice. The system is not intended for live trading.
+This project is for educational and research purposes only. The strategies, data, and results are part of a controlled academic study and do not constitute investment advice. Not intended for live trading.
+
+## License
+
+[MIT](LICENSE)
