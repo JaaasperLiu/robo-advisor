@@ -1,8 +1,6 @@
 # Robo-Advisor: A Reproducible Algorithmic Backtesting System
 
-> Dissertation project — *"Design and Evaluation of a Reproducible Algorithmic Backtesting System"*
-
-A modular, offline backtesting system that evaluates rule-based portfolio strategies with a focus on **correctness**, **reproducibility**, and **engineering robustness**. The system provides a complete pipeline from data ingestion to auditable performance reports.
+A modular, offline backtesting system that evaluates rule-based portfolio strategies with a focus on **correctness**, **reproducibility**, and **engineering robustness**. It provides a complete pipeline from data ingestion to auditable performance reports.
 
 Two transparent strategies are implemented as case studies:
 
