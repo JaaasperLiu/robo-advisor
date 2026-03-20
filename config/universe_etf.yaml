@@ -1,0 +1,15 @@
+# Universe of ETFs (8-ETF monthly setup)
+universe:
+  - SPY   # US Large Cap
+  - QQQ   # Nasdaq 100
+  - IWM   # Small Cap
+  - EFA   # Dev ex-US
+  - EEM   # Emerging
+  - SHY
+  - IEF   # 7-10Y Treasury
+  - DIA
+
+rebalance: monthly
+calendar: last_trading_day
+start: 2005-01-01
+end: 2025-06-30

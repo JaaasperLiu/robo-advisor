@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+.ipynb_checkpoints/
+
+# Data
+data/*
+!data/README.md
+
+# Outputs
+outputs/
+reports/
+
+# Testing
+.pytest_cache/
+
+# Packaging
+*.egg-info/
+dist/
+build/
+
+# Claude
+.claude/
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# R
+.Rhistory

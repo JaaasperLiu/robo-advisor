@@ -1,0 +1,21 @@
+# Backtest parameters
+transaction_cost_bps: 10
+min_weight: 0.0
+max_weight: 0.35
+cash_symbol: CASH
+seed: 42
+
+walk_forward:
+  train_start: 2005-01-01
+  valid_start: 2015-01-01
+  test_start: 2019-01-01
+  step_years: 1
+
+metrics:
+  - CAGR
+  - Volatility
+  - MaxDrawdown
+  - Sharpe
+  - Sortino
+  - Turnover
+  - TrackingError
